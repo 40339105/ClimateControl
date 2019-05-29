@@ -2,8 +2,8 @@
 int sensorPin = 0; //the analog pin the TMP36's Vout (sense) pin is connected to
                         //the resolution is 10 mV / degree centigrade with a
                         //500 mV offset to allow for negative temperatures
-int fanPin = 1; //Pin used to control the fan
-int heaterPin = 2; //Pin used to control the heater
+int fanPin = 3; //Pin used to control the fan
+int heaterPin = 9; //Pin used to control the heater
 
 
 //PID Setup
@@ -18,6 +18,7 @@ void setup() //Serial connection for debuging and sat fan pin's output
                        //to view the result open the serial monitor 
   pinMode(fanPin, OUTPUT);
   pinMode(heaterPin, OUTPUT);
+  pinMode(sensorPin, INPUT);
   myPid.SetMode(AUTOMATIC);
 }
  
