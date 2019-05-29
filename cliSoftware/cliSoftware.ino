@@ -7,7 +7,7 @@ int heaterPin = 9; //Pin used to control the heater
 
 
 //PID Setup
-double Input, Output, Setpoint;
+double Input, Output, Setpoint = 24.0;
 double Kp=20, Ki = 1, Kd=100;
 PID myPid(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
@@ -26,6 +26,7 @@ void loop()                     // run over and over again
 {
  Input = getTemp();
  myPid.Compute();
+ heater();
  Serial.println(getTemp());
  Serial.println(Input);
  Serial.println(Output);
