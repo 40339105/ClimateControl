@@ -1,9 +1,16 @@
-//TMP36 Pin Variables
+#include <PID_v1.h>
 int sensorPin = 0; //the analog pin the TMP36's Vout (sense) pin is connected to
                         //the resolution is 10 mV / degree centigrade with a
                         //500 mV offset to allow for negative temperatures
 int fanPin = 1; //Pin used to control the fan
 int heaterPin = 2; //Pin used to control the heater
+
+
+//PID Setup
+double Input, Output, Setpoint;
+double Kp=20, Ki = 1, Kd=100;
+PID myPid(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+
 
 void setup() //Serial connection for debuging and sat fan pin's output
 {
@@ -11,24 +18,24 @@ void setup() //Serial connection for debuging and sat fan pin's output
                        //to view the result open the serial monitor 
   pinMode(fanPin, OUTPUT);
   pinMode(heaterPin, OUTPUT);
+  myPid.SetMode(AUTOMATIC);
 }
  
 void loop()                     // run over and over again
 {
+ Input = getTemp();
+ myPid.Compute();
  Serial.println(getTemp());
+ Serial.println(Input);
+ Serial.println(Output);
  delay(1000);   //waiting a second
 }
 
-void fan_test(){
-   //Spin the fan
-  for(int x = 0; x <= 255; x+=5){
-    analogWrite(fanPin, x);
-    delay(50);
-   }
-  for(int x = 255; x >= 0; x-=5){
-    analogWrite(fanPin, x);
-    delay(50);
-  }
+void heater(){
+  //Spin the fan and turn the heater off based on the temperature
+  analogWrite(heaterPin, Output);
+  analogWrite(fanPin, (255 - Output));
+  delay(50);
 }
 
 float getTemp(){
